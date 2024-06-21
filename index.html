@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Link WhatsApp</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            font-size: 24px;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        a {
+            display: block;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #007bff;
+            text-decoration: none;
+            word-break: break-all;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        function gerarLink() {
+            let numero = document.getElementById("numero").value;
+
+            // Remover caracteres não numéricos
+            numero = numero.replace(/[^\d]/g, '');
+
+            // Adicionar código do país e DDD se necessário
+            if (numero.length === 10) {
+                // Formato (DDD) (Número)
+                numero = '5548' + numero;
+            } else if (numero.length === 11 && numero.startsWith('0')) {
+                // Formato 048 (Número)
+                numero = '55' + numero.substring(1);
+            } else if (numero.length === 11 && !numero.startsWith('55')) {
+                // Formato (DDD) (Número)
+                numero = '55' + numero;
+            } else if (numero.length === 13 && numero.startsWith('55')) {
+                // Formato +55(DDD)(Número) sem sinal +
+                numero = numero;
+            } else {
+                // Adicionar 5548 se não houver código de país ou DDD
+                if (!numero.startsWith('55')) {
+                    numero = '5548' + numero;
+                } else if (numero.startsWith('55') && numero.length <= 11) {
+                    numero = '5548' + numero.substring(2);
+                }
+            }
+
+            // Gerar link
+            let link = `https://wa.me/${numero}`;
+            
+            // Atualizar o link na página
+            let linkElement = document.getElementById("link");
+            linkElement.href = link;
+            linkElement.textContent = link;
+            linkElement.style.display = 'block';
+        }
+
+        window.onload = function() {
+            document.getElementById("numero").focus();
+        };
+    </script>
+</head>
+<body>
+    <h1>Gerador de Link WhatsApp</h1>
+    <label for="numero">Digite o número de telefone:</label>
+    <input type="text" id="numero" oninput="gerarLink()">
+    <br>
+    <a id="link" href="#" target="_blank" style="display:none;"></a>
+</body>
+</html>
